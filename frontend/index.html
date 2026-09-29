@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProductPulse — AI Product Operations Agent with Organizational Memory</title>
+  <meta name="description" content="AI Product Operations Agent with persistent Hindsight decision memory. Detect, Remember, Reason, Decide, Approve, Execute, Measure, and Learn.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 17L12 22L22 17" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 12L12 17L22 12" stroke="#a5b4fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>ProductPulse <span class="badge badge-primary">Ops Agent</span></h1>
+          <p class="subtitle">AI Product Operations with Organizational Decision Memory</p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <div class="status-indicator">
+          <span class="status-dot online"></span>
+          <span class="status-label">Agent Online (Gemini)</span>
+        </div>
+        <div class="hindsight-badge" id="hindsight-status-badge">
+          <span class="hindsight-icon">🧠</span>
+          <span class="hindsight-bank" id="hindsight-bank-label">Hindsight: productpulse-ops</span>
+        </div>
+        <button class="btn btn-challenge btn-sm" id="btn-challenge-agent" title="Trigger Continuous Learning Loop with a second related incident">
+          <span>⚡ Challenge ProductPulse</span>
+        </button>
+        <button class="btn btn-secondary btn-sm" id="btn-seed-memory" title="Seed Historical Organizational Memories (INC-104, EXP-042)">
+          <span>⚡ Seed Memory Bank</span>
+        </button>
+        <button class="btn btn-secondary btn-sm" id="btn-reflect-modal" title="Synthesize learnings across memory bank">
+          <span>🔍 Memory Reflection</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- VALUE PROPOSITION BAR -->
+  <div class="value-statement-bar">
+    <div class="value-statement-container">
+      <span class="value-sparkle">✨</span>
+      <span class="value-text">ProductPulse learns from every product decision and uses organizational experience to improve the next one.</span>
+    </div>
+  </div>
+
+  <!-- LIFECYCLE TRACKER -->
+  <section class="lifecycle-bar">
+    <div class="lifecycle-container">
+      <div class="step-item active" id="step-detect">
+        <div class="step-num">1</div>
+        <div class="step-label">DETECTED</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" id="step-remember">
+        <div class="step-num">2</div>
+        <div class="step-label">MEMORY RECALLED</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" id="step-reason">
+        <div class="step-num">3</div>
+        <div class="step-label">REASONED</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" id="step-decide">
+        <div class="step-num">4</div>
+        <div class="step-label">RECOMMENDED</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" id="step-approve">
+        <div class="step-num">5</div>
+        <div class="step-label">APPROVED</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" id="step-execute">
+        <div class="step-num">6</div>
+        <div class="step-label">EXECUTED</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" id="step-measure">
+        <div class="step-num">7</div>
+        <div class="step-label">MEASURED</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" id="step-learn">
+        <div class="step-num">8</div>
+        <div class="step-label">COMPLETED</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN DASHBOARD LAYOUT -->
+  <main class="dashboard-grid">
+    
+    <!-- LEFT PANEL: EMERGING PROBLEMS -->
+    <aside class="panel panel-left" id="panel-problems">
+      <div class="panel-header">
+        <div class="panel-title">
+          <h2>1. Emerging Problems</h2>
+          <span class="count-badge" id="problem-count">0</span>
+        </div>
+        <div class="week-filter">
+          <label for="detect-week-select">Period:</label>
+          <select id="detect-week-select" class="select-sm">
+            <option value="3" selected>Week 3 vs Week 2</option>
+            <option value="4">Week 4 vs Week 3</option>
+          </select>
+          <button class="btn btn-icon-sm" id="btn-refresh-detect" title="Run Detection Engine">🔄</button>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <div id="problems-loading" class="loading-state hidden">
+          <div class="spinner"></div>
+          <p>Analyzing telemetry & complaint growth trends...</p>
+        </div>
+        <div id="problems-list" class="problems-list">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER PANEL: AI DECISION & HUMAN APPROVAL WORKSPACE -->
+    <section class="panel panel-center" id="panel-decision">
+      <div class="panel-header">
+        <div class="panel-title">
+          <h2>2. AI Decision & Human Governance</h2>
+          <span class="action-status-badge" id="current-action-state-badge">NO ACTIVE ACTION</span>
+        </div>
+      </div>
+
+      <div class="panel-body" id="decision-workspace-body">
+        <!-- Empty State when no problem selected -->
+        <div id="workspace-empty" class="empty-state">
+          <div class="empty-icon">👈</div>
+          <h3>Select an emerging problem to trigger AI reasoning</h3>
+          <p>ProductPulse will recall relevant organizational memories from Hindsight and synthesize an AI-grounded action.</p>
+        </div>
+
+        <!-- Decision Loading State -->
+        <div id="decision-loading" class="loading-state hidden">
+          <div class="spinner"></div>
+          <p id="decision-loading-msg">Querying Hindsight memory bank & synthesizing decision with Gemini...</p>
+        </div>
+
+        <!-- Agent Activity Stream -->
+        <div class="card agent-activity-card hidden" id="agent-activity-card">
+          <div class="activity-header">
+            <div class="activity-title-group">
+              <span class="activity-pulse-dot"></span>
+              <h4>Agent Execution Stream</h4>
+            </div>
+            <span class="activity-status-tag" id="activity-status-tag">REASONING</span>
+          </div>
+          <div class="activity-steps-list" id="activity-steps-list">
+            <!-- Dynamically populated activity steps -->
+          </div>
+        </div>
+
+        <!-- Active Decision Content -->
+        <div id="workspace-content" class="decision-content hidden">
+          
+          <!-- KEY DEMO MOMENT: MEMORY CHANGED THIS DECISION PANEL (Challenge Continuous Learning Climax) -->
+          <div class="card memory-changed-panel hidden" id="memory-changed-panel">
+            <div class="changed-panel-header">
+              <div class="title-with-icon">
+                <span class="brain-glow-icon">🧠</span>
+                <div>
+                  <h3>MEMORY CHANGED THIS DECISION</h3>
+                  <span class="panel-subtext">ProductPulse adapted this recommendation using recalled organizational experience</span>
+                </div>
+              </div>
+              <span class="badge badge-relevance" id="adaptation-relevance-badge">HIGHLY_RELEVANT</span>
+            </div>
+
+            <div class="adaptation-breakdown-grid">
+              <div class="breakdown-card">
+                <span class="breakdown-label">🏛️ Historical Experience Recalled</span>
+                <p id="adaptation-historical-text">INC-104 &amp; ACT-2026-001 (Android SDK Checkout Failure, -92.9% complaints reduction)</p>
+              </div>
+              <div class="breakdown-card">
+                <span class="breakdown-label">🔍 Observed Similarities</span>
+                <p id="adaptation-similarities-text">Both cases isolated to client-side Android checkout SDK failure blocking transaction confirmation.</p>
+              </div>
+              <div class="breakdown-card">
+                <span class="breakdown-label">⚡ Observed Differences</span>
+                <p id="adaptation-differences-text">Current incident stems from BiometricPrompt &amp; 3DS timeout rather than token exchange handshake.</p>
+              </div>
+              <div class="breakdown-card">
+                <span class="breakdown-label">💡 Adaptation Rationale</span>
+                <p id="adaptation-rationale-text">Adapting proven SDK resilience: implement BiometricPrompt timeout fallback to device passcode re-prompt.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recommended Action Card -->
+          <div class="card action-card">
+            <div class="action-card-header">
+              <div class="action-type-wrap">
+                <span class="badge badge-action-type" id="action-type-badge">CREATE_INVESTIGATION</span>
+                <span class="badge badge-priority" id="action-priority-badge">CRITICAL</span>
+                <span class="badge badge-segment" id="action-segment-badge">Android</span>
+                <span class="badge badge-area" id="action-area-badge">Checkout & Payments</span>
+              </div>
+              <span class="action-id-label" id="action-id-label">ACT-2026-001</span>
+            </div>
+            <h3 class="action-title" id="action-title">Action Title</h3>
+            <p class="action-expected" id="action-expected"><strong>Expected Outcome:</strong> <span>...</span></p>
+          </div>
+
+          <!-- Connection Between Memory and AI Decision (Why Memory Influenced Action) -->
+          <div class="card memory-impact-banner">
+            <span class="impact-icon">⚡</span>
+            <div class="impact-text">
+              <strong>How Hindsight Memory Shaped This Decision:</strong>
+              <span id="memory-influence-text">...</span>
+            </div>
+          </div>
+
+          <!-- Reasoning Contrast Card (With vs Without Memory) -->
+          <div class="card contrast-card">
+            <div class="contrast-header">
+              <h3>Decision Contrast: Organizational Memory vs Baseline</h3>
+            </div>
+            
+            <div class="contrast-grid">
+              <div class="contrast-col with-memory">
+                <div class="col-badge"><span class="icon">💡</span> With Hindsight Memory (AI Agent)</div>
+                <div class="contrast-text" id="reasoning-with-text">...</div>
+              </div>
+              <div class="contrast-col without-memory">
+                <div class="col-badge"><span class="icon">🏢</span> Without Memory (Baseline Triage)</div>
+                <div class="contrast-text" id="reasoning-without-text">...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Evidence & Operational Justification -->
+          <div class="card evidence-card">
+            <h4>Current Evidence & Impact Telemetry</h4>
+            <p id="action-evidence-text">...</p>
+          </div>
+
+          <!-- Human-in-the-Loop Action Controls -->
+          <div class="approval-bar card">
+            <div class="approval-info">
+              <h4>Human-in-the-Loop Governance</h4>
+              <p id="approval-instruction">Review the bounded recommended action before authorizing execution.</p>
+            </div>
+            <div class="approval-actions" id="approval-button-group">
+              <button class="btn btn-danger" id="btn-reject-action">❌ Reject Action</button>
+              <button class="btn btn-success" id="btn-approve-action">✅ Approve Action</button>
+              <button class="btn btn-primary hidden" id="btn-execute-action">🚀 Execute & Start Monitoring</button>
+              <button class="btn btn-primary hidden" id="btn-measure-action">📊 Evaluate Week 4 Impact</button>
+              <button class="btn btn-primary hidden" id="btn-learn-action">🧠 Retain Lesson into Hindsight</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL: RECALLED MEMORIES & OUTCOME MEASUREMENTS -->
+    <aside class="panel panel-right" id="panel-context">
+      <div class="panel-header">
+        <div class="panel-title">
+          <h2>3. Memory & Measured Impact</h2>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        
+        <!-- Recalled Hindsight Memories Section -->
+        <div class="section-block">
+          <div class="memory-narrative-box">
+            <span class="narrative-icon">📖</span>
+            <div class="narrative-content">
+              <strong>What the Organization Remembers:</strong>
+              <p>Historical incident decisions, actions, and verified KPI outcomes recalled from persistent Hindsight memory.</p>
+            </div>
+          </div>
+
+          <div class="section-title-wrap">
+            <h3>Recalled Memories (<span id="recalled-count">0</span>)</h3>
+            <span class="source-tag">Hindsight TEMPR</span>
+          </div>
+          
+          <div id="recalled-memories-list" class="memories-list">
+            <div class="empty-hint">No memories recalled yet. Select a problem to search the Hindsight bank.</div>
+          </div>
+        </div>
+
+        <!-- Measurement & Learning Section (Populated on Measure) -->
+        <div class="section-block hidden" id="measurement-section">
+          <div class="section-title-wrap">
+            <h3>Intervention Impact (Week 3 vs Week 4)</h3>
+            <span class="badge" id="measurement-outcome-badge">SUCCESS</span>
+          </div>
+
+          <div class="metrics-comparison-grid">
+            <div class="metric-card">
+              <span class="metric-label">Complaints</span>
+              <div class="metric-value">
+                <span id="metric-pre-complaints">14</span>
+                <span class="metric-arrow">→</span>
+                <span id="metric-post-complaints">1</span>
+              </div>
+              <span class="metric-delta positive" id="metric-complaint-delta">-92.9%</span>
+            </div>
+
+            <div class="metric-card">
+              <span class="metric-label">Sentiment</span>
+              <div class="metric-value">
+                <span id="metric-pre-sentiment">-0.89</span>
+                <span class="metric-arrow">→</span>
+                <span id="metric-post-sentiment">+0.73</span>
+              </div>
+              <span class="metric-delta positive" id="metric-sentiment-delta">+1.62</span>
+            </div>
+          </div>
+
+          <div class="lesson-card">
+            <h4>Distilled Organizational Lesson</h4>
+            <p id="lesson-text">...</p>
+            <div class="hindsight-retained-tag hidden" id="hindsight-retained-tag">
+              <span>🧠 Lesson Stored in Hindsight</span>
+              <code id="retained-memory-id">mem-12345</code>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- REFLECTION MODAL -->
+  <div class="modal-backdrop hidden" id="reflection-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Hindsight Organizational Reflection</h3>
+        <button class="btn-close" id="btn-close-reflection">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">Query Hindsight to synthesize high-level organizational beliefs, recurring patterns, and runbooks across historical incidents and experiments.</p>
+        
+        <div class="query-box">
+          <input type="text" id="reflection-query-input" class="input-text" placeholder="e.g. Android checkout tokenization failures and SDK timeouts" value="Summarize organizational learnings regarding Android checkout tokenization and payment SDK failures.">
+          <button class="btn btn-primary" id="btn-run-reflection">Synthesize Insight</button>
+        </div>
+
+        <div id="reflection-loading" class="loading-state hidden">
+          <div class="spinner"></div>
+          <p>Synthesizing insights across memory bank...</p>
+        </div>
+
+        <div id="reflection-output" class="reflection-output hidden">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
